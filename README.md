@@ -60,7 +60,7 @@ conda activate markitdown
 ## Installation
 
 For a macOS Finder right-click action that converts `.eml` and `.msg` emails to
-Markdown, see the [Finder Quick Action setup](integrations/macos/README.md).
+Markdown, see the [Save as Markdown setup for Finder and Mail](integrations/macos/README.md).
 
 To install MarkItDown, use pip: `pip install 'markitdown[all]'`. Alternatively, you can install it from the source:
 

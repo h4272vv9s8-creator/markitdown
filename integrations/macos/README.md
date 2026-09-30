@@ -1,4 +1,4 @@
-# Finder Quick Action
+# Save as Markdown (Finder and Mail)
 
 Install on macOS with Python 3.10 or newer from the repository root:
 
@@ -7,29 +7,37 @@ python3 integrations/macos/install_quick_action.py
 ```
 
 The installer creates a dedicated virtual environment, installs this checkout
-with the Outlook dependency, and registers **Convert Email to Markdown** in
-Finder. Keep the checkout in place: the service runs its conversion script and
-editable MarkItDown package directly. Re-run the installer after moving it.
-An existing service with this name is backed up before replacement.
+with the Outlook dependency, and registers one service, **Save as Markdown**,
+for Finder and Apple Mail. Keep the checkout in place: the service runs its
+conversion script and editable MarkItDown package directly. Re-run the
+installer after moving it. Earlier Finder-only and Mail-only services are
+backed up and replaced.
 
-Select one or more `.eml` or `.msg` files, right-click, and choose **Quick Actions
-→ Convert Email to Markdown** (or **Services → Convert Email to Markdown**).
-Markdown is saved beside each original. Existing output is preserved with
-numbered filenames, such as `Message (1).md`. Source emails are never modified.
-Conversion runs locally without sending email contents to a cloud service.
+Use it from the app's **Services** menu or press **Shift-Option-Command-M**:
 
-The service accepts Finder files because MSG file type associations vary between
-Macs; selecting an unsupported file reports an error. Other selected emails are
-still processed. Finder/Automator displays conversion failures. If the action is
-hidden, enable it in System Settings under Keyboard → Keyboard Shortcuts →
-Services, or the Finder extensions/Quick Actions settings for your macOS version.
+- **Finder:** select one or more `.eml` or `.msg` files. Markdown is saved
+  beside each original.
+- **Mail:** select one or more messages. Markdown is saved in `~/Downloads`,
+  named after each subject, and the newest file is revealed in Finder.
+
+Existing output is preserved with numbered filenames, such as
+`Message (1).md`. Source emails are never modified. Conversion runs locally
+without sending email contents to a cloud service. A notification reports how
+many emails were saved or failed. The first run in each app asks permission to
+read its selection; if it was denied, allow it under System Settings → Privacy
+& Security → Automation. If the service is hidden or the shortcut clashes,
+change it under System Settings → Keyboard → Keyboard Shortcuts → Services.
 
 EML conversion decodes MIME headers and body encodings, prefers the HTML body,
-and lists attachment names without extracting them. MSG conversion uses the
-existing MarkItDown converter, which extracts From, To, Subject and plain-text
-body; it does not extract attachments or render HTML/RTF-only MSG bodies.
+and lists attachment names without extracting them. HTML layout tables are
+flattened, label/value rows become `**Label:** value` lines, and tracking
+pixels and undescribed images are dropped; tables with header cells or a
+consistent grid of three or more columns are kept as Markdown tables. MSG
+conversion uses the existing MarkItDown converter, which extracts From, To,
+Subject and plain-text body; it does not extract attachments or render
+HTML/RTF-only MSG bodies.
 
-To uninstall, remove `~/Library/Services/Convert Email to Markdown.workflow`.
+To uninstall, remove `~/Library/Services/Save as Markdown.workflow`.
 The dedicated environment and backups reside in
 `~/Library/Application Support/MarkItDown Quick Action`.
 
