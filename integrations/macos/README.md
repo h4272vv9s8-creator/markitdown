@@ -1,10 +1,15 @@
 # Save as Markdown (Finder and Mail)
 
-Install on macOS with Python 3.10 or newer from the repository root:
+Install on macOS from the repository root:
 
 ```sh
 python3 integrations/macos/install_quick_action.py
 ```
+
+The installer needs Python 3.10 or newer. If `python3` is the older one that
+ships with macOS, it re-runs itself with the newest 3.10+ it finds from
+Homebrew, python.org or your `PATH`; if there is none, install one with
+`brew install python`.
 
 The installer creates a dedicated virtual environment, installs this checkout
 with the Outlook dependency, and registers one service, **Save as Markdown**,

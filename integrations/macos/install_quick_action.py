@@ -17,9 +17,30 @@ APPS = ["com.apple.finder", "com.apple.mail"]
 REPLACES = ["Convert Email to Markdown", "Save Email as Markdown"]
 
 
+def find_python():
+    """Newest Python 3.10+ from Homebrew, python.org or PATH (macOS ships 3.9)."""
+    names = [f"python3.{minor}" for minor in range(20, 9, -1)]
+    folders = ["/opt/homebrew/bin", "/usr/local/bin"]
+    folders += [f"/Library/Frameworks/Python.framework/Versions/3.{minor}/bin" for minor in range(20, 9, -1)]
+    candidates = [os.path.join(folder, name) for folder in folders for name in names]
+    candidates += [found for found in map(shutil.which, names) if found]
+    for candidate in candidates:
+        if os.access(candidate, os.X_OK):
+            check = subprocess.run([candidate, "-c", "import sys; sys.exit(sys.version_info < (3, 10))"])
+            if check.returncode == 0:
+                return candidate
+    return None
+
+
 def install():
-    if sys.platform != "darwin" or sys.version_info < (3, 10):
-        raise SystemExit("Run on macOS with Python 3.10 or newer.")
+    if sys.platform != "darwin":
+        raise SystemExit("Run on macOS.")
+    if sys.version_info < (3, 10):
+        python = find_python()
+        if not python:
+            raise SystemExit("Python 3.10 or newer is required. Install one with: brew install python")
+        print(f"Python {sys.version.split()[0]} is too old; re-running with {python}", flush=True)
+        os.execv(python, [python, os.path.abspath(__file__)] + sys.argv[1:])
     repo = Path(__file__).resolve().parents[2]
     support = Path.home() / "Library/Application Support/MarkItDown Quick Action"
     support.mkdir(parents=True, exist_ok=True)
